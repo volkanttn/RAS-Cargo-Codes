@@ -126,7 +126,7 @@ for(kj=kj; kj<pathLength-1 ;kj++){
           break;
 
         case 221:
-          path[kj]='s';
+          path[kj]='d';
            i++;
           break;
           
