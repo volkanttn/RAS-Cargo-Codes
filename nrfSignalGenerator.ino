@@ -148,7 +148,7 @@ for(jk=0; jk<=signalMagnitude ;jk=jk+32){
 void loop() {
   delay(500);
   
- Serial.println("h");
+ 
   
   
   }
