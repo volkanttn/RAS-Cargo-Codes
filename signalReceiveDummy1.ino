@@ -4,31 +4,11 @@
 
 RF24 radio(A2, 4);
 
-
-
-void setup() {
-  char *commands;
-  // put your setup code here, to run once:
-int signalLengthLol= receiveSignal(&commands);
-
-for(short int w=0; w<signalLengthLol-1; w++) {
-    Serial.println(*(commands+w));
-    }
-    
-    
-}
-
-void loop() {
-  // put your main code here, to run repeatedly:
-
-}
-
-int * receiveSignal(char** commands){
-  const byte address[6] = "ras56"; //this will help us communicate with our module and our module only
+const byte address[6] = "ras56"; //this will help us communicate with our module and our module only
 char dataChunk[32];
 
-char possiblecommands[7]="fslrpd";
-static char commandCodes[216][3];
+char commands[7]="fslrpd";
+char commandCodes[216][3];
 
 short int i=0;
 short int j=0;
@@ -41,12 +21,17 @@ short int kj=0;
 
 short int pathLength=0;
 
+
+
+void setup() {
+  // put your setup code here, to run once:
+
 for(i=0; i<=5; i++){
      for(j=0; j<=5; j++){
       for(k=0; k<=5; k++){
-            commandCodes[l][0]=possiblecommands[i];
-            commandCodes[l][1]=possiblecommands[j];
-            commandCodes[l][2]=possiblecommands[k];
+            commandCodes[l][0]=commands[i];
+            commandCodes[l][1]=commands[j];
+            commandCodes[l][2]=commands[k];
             l++;
     }
     }
@@ -60,8 +45,6 @@ Serial.begin(9600);
   radio.startListening();
 
 while(1){Serial.println("waiting for signal...");
-
-
 if (radio.available()) {
     radio.read(&sizeOfSignal, sizeof(sizeOfSignal));
     break;
@@ -69,11 +52,8 @@ if (radio.available()) {
   delay(15);
   }
 
-
-
-
-
 unsigned char signalReceived[sizeOfSignal];
+
 
 
 
@@ -104,21 +84,17 @@ pathLength=pathLength*3;
 pathLength=pathLength+sizeOfSignal-i;
 
 char path[pathLength];
-*(commands) = new char[pathLength];
-
 
 
 kj=0;
 for(i=0; signalReceived[i]<216 && i<sizeOfSignal-1; i++){
 
-
-     path[kj]=commandCodes[signalReceived[i]][0];
+     path[kj]=commandCodes[signalReceived[i]][0]; 
      kj++;
      path[kj]=commandCodes[signalReceived[i]][1];
      kj++;
      path[kj]=commandCodes[signalReceived[i]][2];
       kj++;
-      
      }
 
 
@@ -161,14 +137,15 @@ for(kj=kj; kj<pathLength-1 ;kj++){
           break;
       }}
 
-for(i=0; i<pathLength-1; i++) {
-    //Serial.print(path[i]);
-    }
 
 
-memcpy(*(commands), path, pathLength);
+for(i=0; i<sizeof(path)-1; i++) {
+    Serial.print(path[i]);}
+}
 
-return pathLength;
-
-
+void loop() {
+  // put your main code here, to run repeatedly
+  
+delay(50);
+  
 }
